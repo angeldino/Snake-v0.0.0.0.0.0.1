@@ -7,13 +7,13 @@ var touchCube = false;
 var moveAxis = 1;
 var score = 0;
 var lives = 3;
-//move Axis
-/*
-Derecha = 1
-Izquierda = 2
-Abajo = 3
-Arriba = 4
-*/
+var scoreValidation = false;
+var cordX = [];
+var cordY = [];
+var count = 6;
+var condicion = false;
+var countCondicion = 0;
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
@@ -37,11 +37,13 @@ function keyUpHandler(e) {
     }
 }
 
-function Cube(posX, posY, width, height) {
-    this.posX = posX;
-    this.posY = posY;
-    this.width = width;
-    this.height = height;
+class Cube {
+    constructor(posX, posY, width, height) {
+        this.posX = posX;
+        this.posY = posY;
+        this.width = width;
+        this.height = height;
+    }
 }
 
 this.posX = 200;
@@ -49,21 +51,45 @@ this.posY = 200;
 this.width = 10;
 this.height = 10;
 
-var cabeza = new Cube(this.posX, this.posY, this.width, this.height);
-var cuerpo = new Cube(this.posX, this.posY, this.width, this.height);
+var cabeza = new Cube(this.posX, this.posY, this.width, this.height); //cabeza que dirige el gusano
+var cuerpo = new Cube(this.posX, this.posY, this.width, this.height); // score para tocar y sumar punto
+var medio = new Cube(this.posX, this.posY, this.width, this.height); //cuerpo medio del gusano
 
-cuerpo.posX = Math.floor(Math.random() * canvas.width - 10);
-cuerpo.posY = Math.floor(Math.random() * canvas.height - 10);;
-console.log(cuerpo.posX);
-console.log(cuerpo.posY);
+function createNewCube() {
+    
+}
 
-function drawCubes() {
+function changePos() {
+    var contador1 = cordX.push(cabeza.posX);
+    var contador2 = cordY.push(cabeza.posY);
+    for(i = 0; i < cordX.length; i++) {
+    }
+}
+
+function changePosScoreCube() {
+    cuerpo.posX = Math.floor(Math.random() * canvas.width - 10);
+    cuerpo.posY = Math.floor(Math.random() * canvas.height - 10);;
+}
+
+function drawPlayer() {
     ctx.beginPath();
     ctx.rect(cabeza.posX, cabeza.posY, cabeza.width, cabeza.height);
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
+}
 
+function addMedio() {
+    changePos();
+    ctx.beginPath();
+    ctx.rect(cordX[i-2], cordY[i-2], medio.width, medio.height);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.closePath();
+}
+
+changePosScoreCube();
+function drawScoreCube() {
     ctx.beginPath();
     ctx.rect(cuerpo.posX, cuerpo.posY, cuerpo.width, cuerpo.height);
     ctx.fillStyle = "red";
@@ -114,15 +140,22 @@ function draw() {
         cabeza.posY -= speed;
     }
 
-    drawCubes();
+    drawPlayer();
+    drawScoreCube();
     scoreCount();
+    addMedio()
+    changePos();
 }
 
 function scoreCount() {
     if(cabeza.posX >= cuerpo.posX && cabeza.posX < cuerpo.posX+10 && cabeza.posY >= cuerpo.posY && cabeza.posY < cuerpo.posY+10) {
         score += 1;
+        changePosScoreCube();
+    }else if(cabeza.posX+10 >= cuerpo.posX && cabeza.posX < cuerpo.posX+10 && cabeza.posY+10 >= cuerpo.posY && cabeza.posY+10 < cuerpo.posY+10){
+        score += 1;
+        changePosScoreCube();
     }
-    console.log(score);
 }
 
 setInterval(draw, 100);
+
